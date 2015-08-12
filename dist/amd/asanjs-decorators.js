@@ -1,4 +1,4 @@
-define(['exports', 'asan-registry'], function (exports, _asanRegistry) {
+define(['exports', 'asanjs-registry'], function (exports, _asanjsRegistry) {
   'use strict';
 
   exports.__esModule = true;
@@ -117,7 +117,7 @@ define(['exports', 'asan-registry'], function (exports, _asanRegistry) {
     }
 
     delete target.prototype.___metadata;
-    return _asanRegistry.Registry.register(tagName, target, options);
+    return _asanjsRegistry.Registry.register(tagName, target, options);
   };
 
   function customElement() {

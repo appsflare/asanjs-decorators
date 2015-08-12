@@ -1,4 +1,4 @@
-import {Registry} from 'asan-registry';
+import {Registry} from 'asanjs-registry';
 
 export function isDescriptor(desc) {
   if (!desc || !desc.hasOwnProperty) {

@@ -1,4 +1,4 @@
-System.register(['asan-registry'], function (_export) {
+System.register(['asanjs-registry'], function (_export) {
   'use strict';
 
   var Registry, handleCustomElementDescriptor, DEFAULT_MSG;
@@ -80,8 +80,8 @@ System.register(['asan-registry'], function (_export) {
   }
 
   return {
-    setters: [function (_asanRegistry) {
-      Registry = _asanRegistry.Registry;
+    setters: [function (_asanjsRegistry) {
+      Registry = _asanjsRegistry.Registry;
     }],
     execute: function () {
 

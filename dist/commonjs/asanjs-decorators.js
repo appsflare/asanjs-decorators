@@ -9,7 +9,7 @@ exports.isDescriptor = isDescriptor;
 exports.decorate = decorate;
 exports.customElement = customElement;
 
-var _asanRegistry = require('asan-registry');
+var _asanjsRegistry = require('asanjs-registry');
 
 function isDescriptor(desc) {
   if (!desc || !desc.hasOwnProperty) {
@@ -118,7 +118,7 @@ var handleCustomElementDescriptor = function handleCustomElementDescriptor(targe
   }
 
   delete target.prototype.___metadata;
-  return _asanRegistry.Registry.register(tagName, target, options);
+  return _asanjsRegistry.Registry.register(tagName, target, options);
 };
 
 function customElement() {
