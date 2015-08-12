@@ -5,7 +5,8 @@ declare module 'asanjs-decorators' {
   export function accessor(options: any): any;
   export function attribute(options: any): any;
   export function customElement(): any;
-  export default undefined;
+  export function deprecate(): any;
+  export function eventHandler(): any;
   export function lifeCycleEventHandler(): any;
   export function method(): any;
 }

@@ -63,34 +63,36 @@ export function decorate(handleDescriptor, entryArgs) {
     }
 });
 
-let handleCustomElementDescriptor = function(target, [tagName, opts = {}]) {
+(function(){
+    let handleCustomElementDescriptor = function (target, [tagName, opts = {}]) {
 
-  let options = {
-    //content:'',
-    accessors:{},
-    methods: {},
-    lifecycle: {},
-    events: {}
-  };
+    let options = {
+        //content:'',
+        accessors: {},
+        methods: {},
+        lifecycle: {},
+        events: {}
+    };
 
-  if(opts.extendsFrom !== undefined)
-  { options['extends']= opts.extendsFrom; }
+    if (opts.extendsFrom !== undefined) {
+        options['extends'] = opts.extendsFrom;
+    }
 
-  if(opts.template !== undefined)
-  { options.template = opts.template; }
+    if (opts.template !== undefined) {
+        options.template = opts.template;
+    }
 
-  if(!target.prototype.___metadata) return;
-  for(var key in target.prototype.___metadata)
-  {
-    var metadata = target.prototype.___metadata[key];
+    if (!target.prototype.___metadata) return;
+    for (var key in target.prototype.___metadata) {
+        var metadata = target.prototype.___metadata[key];
 
-    if(!metadata)continue;
-    options[metadata.type][key] = metadata.value;
-  }
+        if (!metadata) continue;
+        options[metadata.type][key] = metadata.value;
+    }
 
-  //delete metadata once the exported options by method decorators are collected
-  delete target.prototype.___metadata;
-  return Registry.register(tagName, target, options);
+    //delete metadata once the exported options by method decorators are collected
+    delete target.prototype.___metadata;
+    return Registry.register(tagName, target, options);
 };
 
 
@@ -98,32 +100,34 @@ let handleCustomElementDescriptor = function(target, [tagName, opts = {}]) {
 export function customElement() {
     return decorate(handleCustomElementDescriptor, arguments);
 };
-
+})();
+(function(){
 const DEFAULT_MSG = 'This function will be removed in future versions.';
 
 function handleDepricateDescriptor(target, key, descriptor, [msg = DEFAULT_MSG, options = {}]) {
-  if (typeof descriptor.value !== 'function') {
-    throw new SyntaxError('Only functions can be marked as deprecated');
-  }
-
-  const methodSignature = `${target.constructor.name}#${key}`;
-
-  if (options.url) {
-    msg += `\n\n    See ${options.url} for more details.\n\n`;
-  }
-
-  return {
-    ...descriptor,
-    value: function deprecationWrapper() {
-      console.warn(`DEPRECATION ${methodSignature}: ${msg}`);
-      return descriptor.value.apply(this, arguments);
+    if (typeof descriptor.value !== 'function') {
+        throw new SyntaxError('Only functions can be marked as deprecated');
     }
-  };
+
+    const methodSignature = `${target.constructor.name}#${key}`;
+
+    if (options.url) {
+        msg += `\n\n    See ${options.url} for more details.\n\n`;
+    }
+
+    return {
+        ...descriptor,
+        value: function deprecationWrapper() {
+            console.warn(`DEPRECATION ${methodSignature}: ${msg}`);
+            return descriptor.value.apply(this, arguments);
+        }
+    };
 }
 
-export default function deprecate() {
-  return decorate(handleDepricateDescriptor, arguments);
+export function deprecate() {
+    return decorate(handleDepricateDescriptor, arguments);
 }
+})();
 
 (function(){
     let handleDescriptor = function(target, key, descriptor, [event]) {
