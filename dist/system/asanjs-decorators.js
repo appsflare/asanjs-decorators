@@ -1,7 +1,7 @@
-System.register([], function (_export) {
+System.register(['asan-registry'], function (_export) {
   'use strict';
 
-  var handleCustomElementDescriptor, DEFAULT_MSG;
+  var Registry, handleCustomElementDescriptor, DEFAULT_MSG;
   var _slice = Array.prototype.slice;
 
   var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -80,7 +80,9 @@ System.register([], function (_export) {
   }
 
   return {
-    setters: [],
+    setters: [function (_asanRegistry) {
+      Registry = _asanRegistry.Registry;
+    }],
     execute: function () {
 
       (function () {
@@ -96,6 +98,7 @@ System.register([], function (_export) {
           return accessorHandler.apply(undefined, _slice.call(arguments).concat([options]));
         }
       })();
+
       (function () {
         _export('attribute', attribute);
 
@@ -188,6 +191,7 @@ System.register([], function (_export) {
       })());
 
       ;
+
       (function () {
         _export('lifeCycleEventHandler', lifeCycleEventHandler);
 

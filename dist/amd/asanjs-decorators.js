@@ -1,4 +1,4 @@
-define(['exports'], function (exports) {
+define(['exports', 'asan-registry'], function (exports, _asanRegistry) {
   'use strict';
 
   exports.__esModule = true;
@@ -62,6 +62,7 @@ define(['exports'], function (exports) {
       return accessorHandler.apply(undefined, _slice.call(arguments).concat([options]));
     }
   })();
+
   (function () {
     exports.attribute = attribute;
 
@@ -86,6 +87,7 @@ define(['exports'], function (exports) {
       };
     }
   });
+
   var handleCustomElementDescriptor = function handleCustomElementDescriptor(target, _ref2) {
     var tagName = _ref2[0];
     var _ref2$1 = _ref2[1];
@@ -115,7 +117,7 @@ define(['exports'], function (exports) {
     }
 
     delete target.prototype.___metadata;
-    return Registry.register(tagName, target, options);
+    return _asanRegistry.Registry.register(tagName, target, options);
   };
 
   function customElement() {
@@ -181,6 +183,7 @@ define(['exports'], function (exports) {
   })();
 
   ;
+
   (function () {
     exports.lifeCycleEventHandler = lifeCycleEventHandler;
 

@@ -1,4 +1,5 @@
 declare module 'asanjs-decorators' {
+  import { Registry }  from 'asan-registry';
   export function isDescriptor(desc: any): any;
   export function decorate(handleDescriptor: any, entryArgs: any): any;
   export function accessor(options: any): any;

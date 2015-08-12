@@ -1,3 +1,4 @@
+import {Registry} from 'asan-registry';
 
 export function isDescriptor(desc) {
   if (!desc || !desc.hasOwnProperty) {
@@ -38,6 +39,7 @@ export function decorate(handleDescriptor, entryArgs) {
         return accessorHandler(...arguments, options);
     }
 })();
+
 (function () {
     var attributeHandler = function (target, key, descriptor, options) {
         let val = {...descriptor,
@@ -60,6 +62,7 @@ export function decorate(handleDescriptor, entryArgs) {
         };
     }
 });
+
 let handleCustomElementDescriptor = function(target, [tagName, opts = {}]) {
 
   let options = {
@@ -147,6 +150,7 @@ export default function deprecate() {
         return decorate(handleDescriptor, arguments);
     }
 })();
+
 (function(){
 
     let handleDescriptor = function(target,key, descriptor) {
@@ -169,6 +173,7 @@ export default function deprecate() {
     }
 
 });
+
 
 (function(){
     let handleDescriptor = function(target,key, descriptor) {

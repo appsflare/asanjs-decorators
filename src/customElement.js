@@ -1,4 +1,4 @@
-import { Registry } from '../registry';
+import { Registry } from 'asan-registry';
 import { decorate } from './utils';
 
 

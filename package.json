@@ -1,6 +1,6 @@
 {
   "name": "asanjs-decorators",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "jspm": {
     "main": "dist/commonjs/asanjs-decorators.js",
     "directories": {},

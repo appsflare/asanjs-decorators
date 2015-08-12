@@ -9,6 +9,8 @@ exports.isDescriptor = isDescriptor;
 exports.decorate = decorate;
 exports.customElement = customElement;
 
+var _asanRegistry = require('asan-registry');
+
 function isDescriptor(desc) {
   if (!desc || !desc.hasOwnProperty) {
     return false;
@@ -61,6 +63,7 @@ function decorate(handleDescriptor, entryArgs) {
     return accessorHandler.apply(undefined, _slice.call(arguments).concat([options]));
   }
 })();
+
 (function () {
   exports.attribute = attribute;
 
@@ -85,6 +88,7 @@ function decorate(handleDescriptor, entryArgs) {
     };
   }
 });
+
 var handleCustomElementDescriptor = function handleCustomElementDescriptor(target, _ref2) {
   var tagName = _ref2[0];
   var _ref2$1 = _ref2[1];
@@ -114,7 +118,7 @@ var handleCustomElementDescriptor = function handleCustomElementDescriptor(targe
   }
 
   delete target.prototype.___metadata;
-  return Registry.register(tagName, target, options);
+  return _asanRegistry.Registry.register(tagName, target, options);
 };
 
 function customElement() {
@@ -180,6 +184,7 @@ exports['default'] = (function deprecate() {
 })();
 
 ;
+
 (function () {
   exports.lifeCycleEventHandler = lifeCycleEventHandler;
 
