@@ -135,6 +135,7 @@ System.register(['asanjs-registry'], function (_export) {
 
                 ;
             })();
+
             (function () {
                 _export('deprecate', deprecate);
 

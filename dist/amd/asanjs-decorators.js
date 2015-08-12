@@ -128,6 +128,7 @@ define(['exports', 'asanjs-registry'], function (exports, _asanjsRegistry) {
 
         ;
     })();
+
     (function () {
         exports.deprecate = deprecate;
 

@@ -101,6 +101,7 @@ export function customElement() {
     return decorate(handleCustomElementDescriptor, arguments);
 };
 })();
+
 (function(){
 const DEFAULT_MSG = 'This function will be removed in future versions.';
 

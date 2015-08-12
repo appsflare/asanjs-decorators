@@ -129,6 +129,7 @@ function decorate(handleDescriptor, entryArgs) {
 
     ;
 })();
+
 (function () {
     exports.deprecate = deprecate;
 
