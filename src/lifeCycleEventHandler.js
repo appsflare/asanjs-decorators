@@ -21,4 +21,4 @@ import { decorate } from './utils';
         return decorate(handleDescriptor, arguments);
     }
 
-});
+})();

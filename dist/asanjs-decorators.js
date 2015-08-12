@@ -177,7 +177,7 @@ export function deprecate() {
         return decorate(handleDescriptor, arguments);
     }
 
-});
+})();
 
 
 (function(){

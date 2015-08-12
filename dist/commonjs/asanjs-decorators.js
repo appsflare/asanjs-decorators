@@ -213,7 +213,7 @@ function decorate(handleDescriptor, entryArgs) {
     function lifeCycleEventHandler() {
         return decorate(handleDescriptor, arguments);
     }
-});
+})();
 
 (function () {
     exports.method = method;

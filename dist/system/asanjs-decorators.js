@@ -219,7 +219,7 @@ System.register(['asanjs-registry'], function (_export) {
                 function lifeCycleEventHandler() {
                     return decorate(handleDescriptor, arguments);
                 }
-            });
+            })();
 
             (function () {
                 _export('method', method);

@@ -212,7 +212,7 @@ define(['exports', 'asanjs-registry'], function (exports, _asanjsRegistry) {
         function lifeCycleEventHandler() {
             return decorate(handleDescriptor, arguments);
         }
-    });
+    })();
 
     (function () {
         exports.method = method;
