@@ -1,5 +1,6 @@
 (function () {
     var attributeHandler = function (target, key, descriptor, options) {
+        descriptor.writable = true;
         let val = {...descriptor,
             value: {
                 attribute: options

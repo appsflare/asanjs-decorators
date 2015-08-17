@@ -73,6 +73,7 @@ System.register(['asanjs-registry'], function (_export) {
                 _export('attribute', attribute);
 
                 var attributeHandler = function attributeHandler(target, key, descriptor, options) {
+                    descriptor.writable = true;
                     var val = _extends({}, descriptor, {
                         value: {
                             attribute: options
@@ -92,7 +93,6 @@ System.register(['asanjs-registry'], function (_export) {
                     };
                 }
             })();
-
             (function () {
                 _export('customElement', customElement);
 
