@@ -44,19 +44,26 @@ export function decorate(handleDescriptor, entryArgs) {
     var attributeHandler = function (target, key, descriptor, options) {
         descriptor.writable = false;
         let val = {...descriptor,
-            value: {
-                attribute: options
+            'get': function () {
+                if (!this.controller)
+                    return;
+                return descriptor['get'].apply(this.controller, arguments);
+            },
+            'set': function (val) {
+                if (!this.controller)
+                    return;
+                 descriptor['set'].apply(this.controller, arguments);
             }
         };
 
-        if (target._class) {
-            target._class.accessors[key] = val.value;
-        }
+
 
         target.___metadata = target.___metadata || {};
         target.___metadata[key] = {
             type: 'accessors',
-            value: val.value
+            value: {
+                attribute: options
+            }
         };
 
         return val;
