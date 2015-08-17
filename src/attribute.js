@@ -7,7 +7,6 @@
         };
 
         if (target._class) {
-            debugger;
             target._class.accessors[key] = val.value;
         }
 
@@ -19,4 +18,4 @@
             return attributeHandler(...arguments, options);
         };
     }
-});
+})();

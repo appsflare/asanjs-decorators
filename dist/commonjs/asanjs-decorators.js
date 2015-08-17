@@ -74,7 +74,6 @@ function decorate(handleDescriptor, entryArgs) {
         });
 
         if (target._class) {
-            debugger;
             target._class.accessors[key] = val.value;
         }
 
@@ -86,7 +85,7 @@ function decorate(handleDescriptor, entryArgs) {
             return attributeHandler.apply(undefined, _slice.call(arguments).concat([options]));
         };
     }
-});
+})();
 
 (function () {
     exports.customElement = customElement;

@@ -73,7 +73,6 @@ define(['exports', 'asanjs-registry'], function (exports, _asanjsRegistry) {
             });
 
             if (target._class) {
-                debugger;
                 target._class.accessors[key] = val.value;
             }
 
@@ -85,7 +84,7 @@ define(['exports', 'asanjs-registry'], function (exports, _asanjsRegistry) {
                 return attributeHandler.apply(undefined, _slice.call(arguments).concat([options]));
             };
         }
-    });
+    })();
 
     (function () {
         exports.customElement = customElement;

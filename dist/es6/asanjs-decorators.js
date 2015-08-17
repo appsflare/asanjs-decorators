@@ -49,7 +49,6 @@ export function decorate(handleDescriptor, entryArgs) {
         };
 
         if (target._class) {
-            debugger;
             target._class.accessors[key] = val.value;
         }
 
@@ -61,7 +60,7 @@ export function decorate(handleDescriptor, entryArgs) {
             return attributeHandler(...arguments, options);
         };
     }
-});
+})();
 
 (function(){
     let handleCustomElementDescriptor = function (target, [tagName, opts = {}]) {

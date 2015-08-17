@@ -80,7 +80,6 @@ System.register(['asanjs-registry'], function (_export) {
                     });
 
                     if (target._class) {
-                        debugger;
                         target._class.accessors[key] = val.value;
                     }
 
@@ -92,7 +91,7 @@ System.register(['asanjs-registry'], function (_export) {
                         return attributeHandler.apply(undefined, _slice.call(arguments).concat([options]));
                     };
                 }
-            });
+            })();
 
             (function () {
                 _export('customElement', customElement);
