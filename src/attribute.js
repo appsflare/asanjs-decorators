@@ -2,14 +2,15 @@
     var attributeHandler = function (target, key, descriptor, options) {
         //descriptor.writable = false;
 
-        options['get'] = function () {
+        let interceptors = {};
+        interceptors['get'] = function () {
             return descriptor['get'].apply(this.controller, arguments);
         };
-        options['set'] = function (val) {
+        interceptors['set'] = function (val) {
             descriptor['set'].apply(this.controller, arguments);
         };
 
-        let val = {...descriptor, ...options
+        let val = {...descriptor, ...interceptors
         };
 
 
@@ -18,6 +19,7 @@
         target.___metadata[key] = {
             type: 'accessors',
             value: {
+                ...interceptors,
                 attribute: options
             }
         };

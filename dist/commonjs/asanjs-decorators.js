@@ -68,21 +68,22 @@ function decorate(handleDescriptor, entryArgs) {
 
     var attributeHandler = function attributeHandler(target, key, descriptor, options) {
 
-        options['get'] = function () {
+        var interceptors = {};
+        interceptors['get'] = function () {
             return descriptor['get'].apply(this.controller, arguments);
         };
-        options['set'] = function (val) {
+        interceptors['set'] = function (val) {
             descriptor['set'].apply(this.controller, arguments);
         };
 
-        var val = _extends({}, descriptor, options);
+        var val = _extends({}, descriptor, interceptors);
 
         target.___metadata = target.___metadata || {};
         target.___metadata[key] = {
             type: 'accessors',
-            value: {
+            value: _extends({}, interceptors, {
                 attribute: options
-            }
+            })
         };
 
         return val;
@@ -94,6 +95,7 @@ function decorate(handleDescriptor, entryArgs) {
         };
     }
 })();
+
 (function () {
     exports.customElement = customElement;
 
