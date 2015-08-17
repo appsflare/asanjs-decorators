@@ -42,7 +42,7 @@ export function decorate(handleDescriptor, entryArgs) {
 
 (function () {
     var attributeHandler = function (target, key, descriptor, options) {
-        descriptor.writable = true;
+        descriptor.writable = false;
         let val = {...descriptor,
             value: {
                 attribute: options
@@ -52,6 +52,12 @@ export function decorate(handleDescriptor, entryArgs) {
         if (target._class) {
             target._class.accessors[key] = val.value;
         }
+
+        target.___metadata = target.___metadata || {};
+        target.___metadata[key] = {
+            type: 'accessors',
+            value: val.value
+        };
 
         return val;
     };

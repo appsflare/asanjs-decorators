@@ -66,7 +66,7 @@ define(['exports', 'asanjs-registry'], function (exports, _asanjsRegistry) {
         exports.attribute = attribute;
 
         var attributeHandler = function attributeHandler(target, key, descriptor, options) {
-            descriptor.writable = true;
+            descriptor.writable = false;
             var val = _extends({}, descriptor, {
                 value: {
                     attribute: options
@@ -76,6 +76,12 @@ define(['exports', 'asanjs-registry'], function (exports, _asanjsRegistry) {
             if (target._class) {
                 target._class.accessors[key] = val.value;
             }
+
+            target.___metadata = target.___metadata || {};
+            target.___metadata[key] = {
+                type: 'accessors',
+                value: val.value
+            };
 
             return val;
         };
