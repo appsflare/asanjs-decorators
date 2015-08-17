@@ -43,17 +43,15 @@ export function decorate(handleDescriptor, entryArgs) {
 (function () {
     var attributeHandler = function (target, key, descriptor, options) {
         //descriptor.writable = false;
-        let val = {...descriptor,
-            'get': function () {
-                if (!this.controller)
-                    return;
-                return descriptor['get'].apply(this.controller, arguments);
-            },
-            'set': function (val) {
-                if (!this.controller)
-                    return;
-                 descriptor['set'].apply(this.controller, arguments);
-            }
+
+        options['get'] = function () {
+            return descriptor['get'].apply(this.controller, arguments);
+        };
+        options['set'] = function (val) {
+            descriptor['set'].apply(this.controller, arguments);
+        };
+
+        let val = {...descriptor, ...options
         };
 
 
@@ -75,7 +73,6 @@ export function decorate(handleDescriptor, entryArgs) {
         };
     }
 })();
-
 (function(){
     let handleCustomElementDescriptor = function (target, [tagName, opts = {}]) {
 

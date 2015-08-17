@@ -67,16 +67,15 @@ function decorate(handleDescriptor, entryArgs) {
     exports.attribute = attribute;
 
     var attributeHandler = function attributeHandler(target, key, descriptor, options) {
-        var val = _extends({}, descriptor, {
-            'get': function get() {
-                if (!this.controller) return;
-                return descriptor['get'].apply(this.controller, arguments);
-            },
-            'set': function set(val) {
-                if (!this.controller) return;
-                descriptor['set'].apply(this.controller, arguments);
-            }
-        });
+
+        options['get'] = function () {
+            return descriptor['get'].apply(this.controller, arguments);
+        };
+        options['set'] = function (val) {
+            descriptor['set'].apply(this.controller, arguments);
+        };
+
+        var val = _extends({}, descriptor, options);
 
         target.___metadata = target.___metadata || {};
         target.___metadata[key] = {
@@ -95,7 +94,6 @@ function decorate(handleDescriptor, entryArgs) {
         };
     }
 })();
-
 (function () {
     exports.customElement = customElement;
 
