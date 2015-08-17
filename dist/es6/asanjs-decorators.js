@@ -42,7 +42,7 @@ export function decorate(handleDescriptor, entryArgs) {
 
 (function () {
     var attributeHandler = function (target, key, descriptor, options) {
-        descriptor.writable = false;
+        //descriptor.writable = false;
         let val = {...descriptor,
             'get': function () {
                 if (!this.controller)
@@ -75,6 +75,7 @@ export function decorate(handleDescriptor, entryArgs) {
         };
     }
 })();
+
 (function(){
     let handleCustomElementDescriptor = function (target, [tagName, opts = {}]) {
 

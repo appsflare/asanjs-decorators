@@ -1,6 +1,6 @@
 (function () {
     var attributeHandler = function (target, key, descriptor, options) {
-        descriptor.writable = false;
+        //descriptor.writable = false;
         let val = {...descriptor,
             'get': function () {
                 if (!this.controller)

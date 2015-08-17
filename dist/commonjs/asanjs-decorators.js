@@ -67,7 +67,6 @@ function decorate(handleDescriptor, entryArgs) {
     exports.attribute = attribute;
 
     var attributeHandler = function attributeHandler(target, key, descriptor, options) {
-        descriptor.writable = false;
         var val = _extends({}, descriptor, {
             'get': function get() {
                 if (!this.controller) return;
@@ -96,6 +95,7 @@ function decorate(handleDescriptor, entryArgs) {
         };
     }
 })();
+
 (function () {
     exports.customElement = customElement;
 
