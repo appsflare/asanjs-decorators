@@ -76,45 +76,64 @@ export function decorate(handleDescriptor, entryArgs) {
     }
 })();
 
-(function(){
-    let handleCustomElementDescriptor = function (target, [tagName, opts = {}]) {
+(function () {
 
-    let options = {
-        //content:'',
-        accessors: {},
-        methods: {},
-        lifecycle: {},
-        events: {}
+    let queues = {};
+    let addToExecQ = function (key, method) {
+        if (!queues.hasOwnProperty(key)) {
+            queues[key] = [];
+        }
+        queues[key].push(method);
     };
 
-    if (opts.extendsFrom !== undefined) {
-        options['extends'] = opts.extendsFrom;
-    }
+    let handleCustomElementDescriptor = function (target, [tagName, opts = {}]) {
 
-    if (opts.template !== undefined) {
-        options.template = opts.template;
-    }
+        let options = {
+            //content:'',
+            accessors: {},
+            methods: {},
+            lifecycle: {},
+            events: {}
+        };
 
-    if (!target.prototype.___metadata) return;
-    for (var key in target.prototype.___metadata) {
-        var metadata = target.prototype.___metadata[key];
+        if (opts.extendsFrom !== undefined) {
+            options['extends'] = opts.extendsFrom;
+        }
 
-        if (!metadata) continue;
-        options[metadata.type][key] = metadata.value;
-    }
+        if (opts.template !== undefined) {
+            options.template = opts.template;
+        }
 
-    //delete metadata once the exported options by method decorators are collected
-    delete target.prototype.___metadata;
-    return Registry.register(tagName, target, options);
-};
-
+        if (!target.prototype.___metadata) return;
 
 
-export function customElement() {
-    return decorate(handleCustomElementDescriptor, arguments);
-};
+
+        for (var key in target.prototype.___metadata) {
+            var metadata = target.prototype.___metadata[key];
+
+            if (!metadata) continue;
+            switch (key) {
+            case 'lifecycle':
+                options[metadata.type][key] = metadata.value;
+                break;
+            default:
+                options[metadata.type][key] = metadata.value;
+                break;
+            }
+
+        }
+
+        //delete metadata once the exported options by method decorators are collected
+        delete target.prototype.___metadata;
+        return Registry.register(tagName, target, options);
+    };
+
+
+
+    export function customElement() {
+        return decorate(handleCustomElementDescriptor, arguments);
+    };
 })();
-
 (function(){
 const DEFAULT_MSG = 'This function will be removed in future versions.';
 
@@ -169,21 +188,24 @@ export function deprecate() {
     }
 })();
 
-(function(){
+(function () {
 
-    let handleDescriptor = function(target,key, descriptor) {
+    let handleDescriptor = function (target, key, descriptor, [event]) {
 
-    function valueHandler(){
-      if(!this.controller)return;
-      return descriptor.value.apply(this.controller, arguments);
-    };
+        function valueHandler() {
+            if (!this.controller) return;
+            return descriptor.value.apply(this.controller, arguments);
+        };
 
-      target.___metadata = target.___metadata || {};
-      target.___metadata[key] = { type: 'lifecycle', value: valueHandler};
+        target.___metadata = target.___metadata || {};
+        target.___metadata[key] = {
+            type: 'lifecycle',
+            value: valueHandler
+        };
 
-      return {...descriptor,
-        value:  valueHandler
-      };
+        return {...descriptor,
+            value: valueHandler
+        };
     };
 
     export function lifeCycleEventHandler() {
@@ -191,7 +213,6 @@ export function deprecate() {
     }
 
 })();
-
 
 (function(){
     let handleDescriptor = function(target,key, descriptor) {

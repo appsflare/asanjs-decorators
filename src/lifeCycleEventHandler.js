@@ -1,20 +1,26 @@
-import { decorate } from './utils';
+import {
+    decorate
+}
+from './utils';
 
-(function(){
+(function () {
 
-    let handleDescriptor = function(target,key, descriptor) {
+    let handleDescriptor = function (target, key, descriptor, [event]) {
 
-    function valueHandler(){
-      if(!this.controller)return;
-      return descriptor.value.apply(this.controller, arguments);
-    };
+        function valueHandler() {
+            if (!this.controller) return;
+            return descriptor.value.apply(this.controller, arguments);
+        };
 
-      target.___metadata = target.___metadata || {};
-      target.___metadata[key] = { type: 'lifecycle', value: valueHandler};
+        target.___metadata = target.___metadata || {};
+        target.___metadata[key] = {
+            type: 'lifecycle',
+            value: valueHandler
+        };
 
-      return {...descriptor,
-        value:  valueHandler
-      };
+        return {...descriptor,
+            value: valueHandler
+        };
     };
 
     export function lifeCycleEventHandler() {

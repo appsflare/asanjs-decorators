@@ -105,6 +105,14 @@ System.register(['asanjs-registry'], function (_export) {
             (function () {
                 _export('customElement', customElement);
 
+                var queues = {};
+                var addToExecQ = function addToExecQ(key, method) {
+                    if (!queues.hasOwnProperty(key)) {
+                        queues[key] = [];
+                    }
+                    queues[key].push(method);
+                };
+
                 var handleCustomElementDescriptor = function handleCustomElementDescriptor(target, _ref2) {
                     var tagName = _ref2[0];
                     var _ref2$1 = _ref2[1];
@@ -126,11 +134,19 @@ System.register(['asanjs-registry'], function (_export) {
                     }
 
                     if (!target.prototype.___metadata) return;
+
                     for (var key in target.prototype.___metadata) {
                         var metadata = target.prototype.___metadata[key];
 
                         if (!metadata) continue;
-                        options[metadata.type][key] = metadata.value;
+                        switch (key) {
+                            case 'lifecycle':
+                                options[metadata.type][key] = metadata.value;
+                                break;
+                            default:
+                                options[metadata.type][key] = metadata.value;
+                                break;
+                        }
                     }
 
                     delete target.prototype.___metadata;
@@ -143,7 +159,6 @@ System.register(['asanjs-registry'], function (_export) {
 
                 ;
             })();
-
             (function () {
                 _export('deprecate', deprecate);
 
@@ -209,7 +224,8 @@ System.register(['asanjs-registry'], function (_export) {
             (function () {
                 _export('lifeCycleEventHandler', lifeCycleEventHandler);
 
-                var handleDescriptor = function handleDescriptor(target, key, descriptor) {
+                var handleDescriptor = function handleDescriptor(target, key, descriptor, _ref5) {
+                    var event = _ref5[0];
 
                     function valueHandler() {
                         if (!this.controller) return;
@@ -217,7 +233,10 @@ System.register(['asanjs-registry'], function (_export) {
                     };
 
                     target.___metadata = target.___metadata || {};
-                    target.___metadata[key] = { type: 'lifecycle', value: valueHandler };
+                    target.___metadata[key] = {
+                        type: 'lifecycle',
+                        value: valueHandler
+                    };
 
                     return _extends({}, descriptor, {
                         value: valueHandler
