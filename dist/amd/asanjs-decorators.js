@@ -152,6 +152,7 @@ define(['exports', 'asanjs-registry'], function (exports, _asanjsRegistry) {
 
         ;
     })();
+
     (function () {
         exports.deprecate = deprecate;
 
@@ -226,7 +227,7 @@ define(['exports', 'asanjs-registry'], function (exports, _asanjsRegistry) {
             };
 
             target.___metadata = target.___metadata || {};
-            target.___metadata[key] = {
+            target.___metadata[event] = {
                 type: 'lifecycle',
                 value: valueHandler
             };

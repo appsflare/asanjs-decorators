@@ -13,7 +13,7 @@ from './utils';
         };
 
         target.___metadata = target.___metadata || {};
-        target.___metadata[key] = {
+        target.___metadata[event] = {
             type: 'lifecycle',
             value: valueHandler
         };

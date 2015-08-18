@@ -134,6 +134,7 @@ export function decorate(handleDescriptor, entryArgs) {
         return decorate(handleCustomElementDescriptor, arguments);
     };
 })();
+
 (function(){
 const DEFAULT_MSG = 'This function will be removed in future versions.';
 
@@ -198,7 +199,7 @@ export function deprecate() {
         };
 
         target.___metadata = target.___metadata || {};
-        target.___metadata[key] = {
+        target.___metadata[event] = {
             type: 'lifecycle',
             value: valueHandler
         };
@@ -213,6 +214,7 @@ export function deprecate() {
     }
 
 })();
+
 
 (function(){
     let handleDescriptor = function(target,key, descriptor) {

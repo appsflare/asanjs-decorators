@@ -153,6 +153,7 @@ function decorate(handleDescriptor, entryArgs) {
 
     ;
 })();
+
 (function () {
     exports.deprecate = deprecate;
 
@@ -227,7 +228,7 @@ function decorate(handleDescriptor, entryArgs) {
         };
 
         target.___metadata = target.___metadata || {};
-        target.___metadata[key] = {
+        target.___metadata[event] = {
             type: 'lifecycle',
             value: valueHandler
         };

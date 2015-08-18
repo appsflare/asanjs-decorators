@@ -159,6 +159,7 @@ System.register(['asanjs-registry'], function (_export) {
 
                 ;
             })();
+
             (function () {
                 _export('deprecate', deprecate);
 
@@ -233,7 +234,7 @@ System.register(['asanjs-registry'], function (_export) {
                     };
 
                     target.___metadata = target.___metadata || {};
-                    target.___metadata[key] = {
+                    target.___metadata[event] = {
                         type: 'lifecycle',
                         value: valueHandler
                     };
