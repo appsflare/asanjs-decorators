@@ -4,7 +4,7 @@
 
         let interceptors = {};
         interceptors['get'] = function () {
-            if(!this.controller) return;
+            if(!this.controller) return options.defaultValue;
             return descriptor['get'].apply(this.controller, arguments);
         };
         interceptors['set'] = function (val) {
