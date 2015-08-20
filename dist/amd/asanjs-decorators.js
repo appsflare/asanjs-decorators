@@ -69,9 +69,11 @@ define(['exports', 'asanjs-registry'], function (exports, _asanjsRegistry) {
 
             var interceptors = {};
             interceptors['get'] = function () {
+                if (!this.controller) return;
                 return descriptor['get'].apply(this.controller, arguments);
             };
             interceptors['set'] = function (val) {
+                if (!this.controller) return;
                 descriptor['set'].apply(this.controller, arguments);
             };
 
