@@ -45,12 +45,17 @@ export function decorate(handleDescriptor, entryArgs) {
         //descriptor.writable = false;
 
         let interceptors = {};
+
+        options = Object.assign({
+            key: key
+        }, options || {});
+
         interceptors['get'] = function () {
-            if(!this.controller) return options && options.defaultValue;
+            if (!this.controller) return options && options.defaultValue;
             return descriptor['get'].apply(this.controller, arguments);
         };
         interceptors['set'] = function (val) {
-            if(!this.controller) return;
+            if (!this.controller) return;
             descriptor['set'].apply(this.controller, arguments);
         };
 
@@ -77,7 +82,6 @@ export function decorate(handleDescriptor, entryArgs) {
         };
     }
 })();
-
 (function () {
 
     let queues = {};

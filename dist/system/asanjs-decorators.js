@@ -75,6 +75,11 @@ System.register(['asanjs-registry'], function (_export) {
                 var attributeHandler = function attributeHandler(target, key, descriptor, options) {
 
                     var interceptors = {};
+
+                    options = Object.assign({
+                        key: key
+                    }, options || {});
+
                     interceptors['get'] = function () {
                         if (!this.controller) return options && options.defaultValue;
                         return descriptor['get'].apply(this.controller, arguments);
@@ -103,7 +108,6 @@ System.register(['asanjs-registry'], function (_export) {
                     };
                 }
             })();
-
             (function () {
                 _export('customElement', customElement);
 

@@ -69,6 +69,11 @@ function decorate(handleDescriptor, entryArgs) {
     var attributeHandler = function attributeHandler(target, key, descriptor, options) {
 
         var interceptors = {};
+
+        options = Object.assign({
+            key: key
+        }, options || {});
+
         interceptors['get'] = function () {
             if (!this.controller) return options && options.defaultValue;
             return descriptor['get'].apply(this.controller, arguments);
@@ -97,7 +102,6 @@ function decorate(handleDescriptor, entryArgs) {
         };
     }
 })();
-
 (function () {
     exports.customElement = customElement;
 
