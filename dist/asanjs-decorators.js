@@ -106,7 +106,7 @@ export function decorate(handleDescriptor, entryArgs) {
             options.template = opts.template;
         }
 
-        if (!target.prototype.___metadata) {
+        if (target.prototype.___metadata) {
 
             for (var key in target.prototype.___metadata) {
                 var metadata = target.prototype.___metadata[key];
@@ -135,6 +135,7 @@ export function decorate(handleDescriptor, entryArgs) {
         return decorate(handleCustomElementDescriptor, arguments);
     };
 })();
+
 (function(){
 const DEFAULT_MSG = 'This function will be removed in future versions.';
 

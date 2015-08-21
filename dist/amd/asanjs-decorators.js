@@ -128,7 +128,7 @@ define(['exports', 'asanjs-registry'], function (exports, _asanjsRegistry) {
                 options.template = opts.template;
             }
 
-            if (!target.prototype.___metadata) {
+            if (target.prototype.___metadata) {
 
                 for (var key in target.prototype.___metadata) {
                     var metadata = target.prototype.___metadata[key];
@@ -155,6 +155,7 @@ define(['exports', 'asanjs-registry'], function (exports, _asanjsRegistry) {
 
         ;
     })();
+
     (function () {
         exports.deprecate = deprecate;
 

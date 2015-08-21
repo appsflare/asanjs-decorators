@@ -30,7 +30,7 @@ import {decorate} from './utils';
             options.template = opts.template;
         }
 
-        if (!target.prototype.___metadata) {
+        if (target.prototype.___metadata) {
 
             for (var key in target.prototype.___metadata) {
                 var metadata = target.prototype.___metadata[key];

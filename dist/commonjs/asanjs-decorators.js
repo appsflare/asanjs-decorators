@@ -129,7 +129,7 @@ function decorate(handleDescriptor, entryArgs) {
             options.template = opts.template;
         }
 
-        if (!target.prototype.___metadata) {
+        if (target.prototype.___metadata) {
 
             for (var key in target.prototype.___metadata) {
                 var metadata = target.prototype.___metadata[key];
@@ -156,6 +156,7 @@ function decorate(handleDescriptor, entryArgs) {
 
     ;
 })();
+
 (function () {
     exports.deprecate = deprecate;
 

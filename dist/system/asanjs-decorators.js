@@ -135,7 +135,7 @@ System.register(['asanjs-registry'], function (_export) {
                         options.template = opts.template;
                     }
 
-                    if (!target.prototype.___metadata) {
+                    if (target.prototype.___metadata) {
 
                         for (var key in target.prototype.___metadata) {
                             var metadata = target.prototype.___metadata[key];
@@ -162,6 +162,7 @@ System.register(['asanjs-registry'], function (_export) {
 
                 ;
             })();
+
             (function () {
                 _export('deprecate', deprecate);
 
