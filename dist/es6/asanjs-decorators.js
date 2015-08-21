@@ -106,27 +106,26 @@ export function decorate(handleDescriptor, entryArgs) {
             options.template = opts.template;
         }
 
-        if (!target.prototype.___metadata) return;
+        if (!target.prototype.___metadata) {
 
+            for (var key in target.prototype.___metadata) {
+                var metadata = target.prototype.___metadata[key];
 
+                if (!metadata) continue;
+                switch (key) {
+                case 'lifecycle':
+                    options[metadata.type][key] = metadata.value;
+                    break;
+                default:
+                    options[metadata.type][key] = metadata.value;
+                    break;
+                }
 
-        for (var key in target.prototype.___metadata) {
-            var metadata = target.prototype.___metadata[key];
-
-            if (!metadata) continue;
-            switch (key) {
-            case 'lifecycle':
-                options[metadata.type][key] = metadata.value;
-                break;
-            default:
-                options[metadata.type][key] = metadata.value;
-                break;
             }
 
+            //delete metadata once the exported options by method decorators are collected
+            delete target.prototype.___metadata;
         }
-
-        //delete metadata once the exported options by method decorators are collected
-        delete target.prototype.___metadata;
         return Registry.register(tagName, target, options);
     };
 
@@ -136,7 +135,6 @@ export function decorate(handleDescriptor, entryArgs) {
         return decorate(handleCustomElementDescriptor, arguments);
     };
 })();
-
 (function(){
 const DEFAULT_MSG = 'This function will be removed in future versions.';
 

@@ -128,23 +128,24 @@ define(['exports', 'asanjs-registry'], function (exports, _asanjsRegistry) {
                 options.template = opts.template;
             }
 
-            if (!target.prototype.___metadata) return;
+            if (!target.prototype.___metadata) {
 
-            for (var key in target.prototype.___metadata) {
-                var metadata = target.prototype.___metadata[key];
+                for (var key in target.prototype.___metadata) {
+                    var metadata = target.prototype.___metadata[key];
 
-                if (!metadata) continue;
-                switch (key) {
-                    case 'lifecycle':
-                        options[metadata.type][key] = metadata.value;
-                        break;
-                    default:
-                        options[metadata.type][key] = metadata.value;
-                        break;
+                    if (!metadata) continue;
+                    switch (key) {
+                        case 'lifecycle':
+                            options[metadata.type][key] = metadata.value;
+                            break;
+                        default:
+                            options[metadata.type][key] = metadata.value;
+                            break;
+                    }
                 }
-            }
 
-            delete target.prototype.___metadata;
+                delete target.prototype.___metadata;
+            }
             return _asanjsRegistry.Registry.register(tagName, target, options);
         };
 
@@ -154,7 +155,6 @@ define(['exports', 'asanjs-registry'], function (exports, _asanjsRegistry) {
 
         ;
     })();
-
     (function () {
         exports.deprecate = deprecate;
 
