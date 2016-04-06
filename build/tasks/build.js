@@ -18,57 +18,58 @@ var jsName = paths.packageName + '.js';
 
 console.log('js name:' + jsName);
 
-gulp.task('build-index', function () {
+gulp.task('build-index', function() {
     var importsToAdd = [];
-    var files = ['utils.js','accessor.js', 'attribute.js', 'customElement.js', 'deprecate.js', 'eventHandler.js', 'lifeCycleEventHandler.js', 'method.js'].map(function (file) {
-        return paths.root + file;
-    });
+    var files = ['utils.js',
+        'accessor.js',
+        'attribute.js',
+        'customElement.js',
+        'deprecate.js',
+        'eventHandler.js',
+        'lifeCycleEventHandler.js',
+        'method.js'].map(function(file) {
+            return paths.root + file;
+        });
 
     return gulp.src(files)
-        .pipe(through2.obj(function (file, enc, callback) {
+        .pipe(through2.obj(function(file, enc, callback) {
             file.contents = new Buffer(tools.extractImports(file.contents.toString("utf8"), importsToAdd));
             this.push(file);
             return callback();
         }))
         .pipe(concat(jsName))
-        .pipe(insert.transform(function (contents) {
+        .pipe(insert.transform(function(contents) {
             return tools.createImportBlock(importsToAdd) + contents;
         }))
         .pipe(gulp.dest(paths.output));
 });
 
-gulp.task('build-es6', function () {
+gulp.task('build-es2015', function() {
     return gulp.src(paths.output + jsName)
         .pipe(gulp.dest(paths.output + 'es6'));
 });
 
-gulp.task('build-commonjs', function () {
+gulp.task('build-commonjs', function() {
     return gulp.src(paths.output + jsName)
-        .pipe(to5(assign({}, compilerOptions, {
-            modules: 'common'
-        })))
+        .pipe(to5(assign({}, compilerOptions.commonjs())))
         .pipe(gulp.dest(paths.output + 'commonjs'));
 });
 
-gulp.task('build-amd', function () {
+gulp.task('build-amd', function() {
     return gulp.src(paths.output + jsName)
-        .pipe(to5(assign({}, compilerOptions, {
-            modules: 'amd'
-        })))
+        .pipe(to5(assign({}, compilerOptions.amd())))
         .pipe(gulp.dest(paths.output + 'amd'));
 });
 
-gulp.task('build-system', function () {
+gulp.task('build-system', function() {
     return gulp.src(paths.output + jsName)
-        .pipe(to5(assign({}, compilerOptions, {
-            modules: 'system'
-        })))
+        .pipe(to5(assign({}, compilerOptions.system())))
         .pipe(gulp.dest(paths.output + 'system'));
 });
 
 
 // copies changed html files to the output directory
-gulp.task('build-html', function () {
+gulp.task('build-html', function() {
     return gulp.src(paths.html)
         .pipe(changed(paths.output, {
             extension: '.html'
@@ -76,14 +77,14 @@ gulp.task('build-html', function () {
         .pipe(gulp.dest(paths.output));
 });
 
-gulp.task('build-less', function () {
+gulp.task('build-less', function() {
     return gulp.src('./src/less/components/*.less')
         .pipe(less())
         .pipe(gulp.dest('./styles/components'));
 });
 
 
-gulp.task('build-dts', function () {
+gulp.task('build-dts', function() {
     return gulp.src(paths.output + 'index.d.ts')
         .pipe(rename(paths.packageName + '.d.ts'))
         .pipe(gulp.dest(paths.output + 'es6'))
@@ -92,10 +93,10 @@ gulp.task('build-dts', function () {
         .pipe(gulp.dest(paths.output + 'system'));
 });
 
-gulp.task('build', function (callback) {
+gulp.task('build', function(callback) {
     return runSequence(
         'clean',
-        'build-index', ['build-es6', 'build-commonjs', 'build-amd', 'build-system' ],
+        'build-index', ['build-es2015', 'build-commonjs', 'build-amd', 'build-system'],
         'build-dts',
         callback
     );

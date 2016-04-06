@@ -1,6 +1,5 @@
 import { decorate } from './utils';
 
-(function(){
 const DEFAULT_MSG = 'This function will be removed in future versions.';
 
 function handleDepricateDescriptor(target, key, descriptor, [msg = DEFAULT_MSG, options = {}]) {
@@ -26,4 +25,4 @@ function handleDepricateDescriptor(target, key, descriptor, [msg = DEFAULT_MSG, 
 export function deprecate() {
     return decorate(handleDepricateDescriptor, arguments);
 }
-})();
+

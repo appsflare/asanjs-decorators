@@ -1,52 +1,30 @@
-System.register(['asanjs-registry'], function (_export) {
-    'use strict';
+'use strict';
 
-    var Registry;
-    var _slice = Array.prototype.slice;
+System.register(['asanjs-registry'], function (_export, _context) {
+    var Registry, _extends, accessorHandler, attributeHandler, queues, addToExecQ, handleCustomElementDescriptor, DEFAULT_MSG, handleEventHandlerDescriptor, handleLifeCycleEventHandlerDescriptor, handleMethodDescriptor;
 
-    var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+    function handleDepricateDescriptor(target, key, descriptor, _ref3) {
+        var _ref3$ = _ref3[0];
+        var msg = _ref3$ === undefined ? DEFAULT_MSG : _ref3$;
+        var _ref3$2 = _ref3[1];
+        var options = _ref3$2 === undefined ? {} : _ref3$2;
 
-    _export('isDescriptor', isDescriptor);
-
-    _export('decorate', decorate);
-
-    function isDescriptor(desc) {
-        if (!desc || !desc.hasOwnProperty) {
-            return false;
+        if (typeof descriptor.value !== 'function') {
+            throw new SyntaxError('Only functions can be marked as deprecated');
         }
 
-        var keys = ['value', 'get', 'set'];
+        var methodSignature = target.constructor.name + '#' + key;
 
-        for (var _iterator = keys, _isArray = Array.isArray(_iterator), _i = 0, _iterator = _isArray ? _iterator : _iterator[Symbol.iterator]();;) {
-            var _ref;
+        if (options.url) {
+            msg += '\n\n    See ' + options.url + ' for more details.\n\n';
+        }
 
-            if (_isArray) {
-                if (_i >= _iterator.length) break;
-                _ref = _iterator[_i++];
-            } else {
-                _i = _iterator.next();
-                if (_i.done) break;
-                _ref = _i.value;
+        return _extends({}, descriptor, {
+            value: function deprecationWrapper() {
+                console.warn('DEPRECATION ' + methodSignature + ': ' + msg);
+                return descriptor.value.apply(this, arguments);
             }
-
-            var key = _ref;
-
-            if (desc.hasOwnProperty(key)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    function decorate(handleDescriptor, entryArgs) {
-        if (isDescriptor(entryArgs[entryArgs.length - 1])) {
-            return handleDescriptor.apply(undefined, entryArgs.concat([[]]));
-        } else {
-            return function () {
-                return handleDescriptor.apply(undefined, _slice.call(arguments).concat([entryArgs]));
-            };
-        }
+        });
     }
 
     return {
@@ -54,230 +32,251 @@ System.register(['asanjs-registry'], function (_export) {
             Registry = _asanjsRegistry.Registry;
         }],
         execute: function () {
+            _extends = Object.assign || function (target) {
+                for (var i = 1; i < arguments.length; i++) {
+                    var source = arguments[i];
 
-            (function () {
-                _export('accessor', accessor);
-
-                var accessorHandler = function accessorHandler(target, key, descriptor, options) {
-                    return _extends({}, descriptor, {
-                        value: function value() {}
-                    });
-                };
-
-                function accessor(options) {
-                    return accessorHandler.apply(undefined, _slice.call(arguments).concat([options]));
+                    for (var key in source) {
+                        if (Object.prototype.hasOwnProperty.call(source, key)) {
+                            target[key] = source[key];
+                        }
+                    }
                 }
-            })();
 
-            (function () {
-                _export('attribute', attribute);
+                return target;
+            };
 
-                var attributeHandler = function attributeHandler(target, key, descriptor, options) {
+            function isDescriptor(desc) {
+                if (!desc || !desc.hasOwnProperty) {
+                    return false;
+                }
 
-                    var interceptors = {};
+                var keys = ['value', 'get', 'set'];
 
-                    options = Object.assign({
-                        key: key
-                    }, options || {});
+                for (var _iterator = keys, _isArray = Array.isArray(_iterator), _i = 0, _iterator = _isArray ? _iterator : _iterator[Symbol.iterator]();;) {
+                    var _ref;
 
-                    interceptors['get'] = function () {
-                        if (!this.controller) return options && options.defaultValue;
-                        return descriptor['get'].apply(this.controller, arguments);
-                    };
-                    interceptors['set'] = function (val) {
-                        if (!this.controller) return;
-                        descriptor['set'].apply(this.controller, arguments);
-                    };
+                    if (_isArray) {
+                        if (_i >= _iterator.length) break;
+                        _ref = _iterator[_i++];
+                    } else {
+                        _i = _iterator.next();
+                        if (_i.done) break;
+                        _ref = _i.value;
+                    }
 
-                    var val = _extends({}, descriptor, interceptors);
+                    var key = _ref;
 
-                    target.___metadata = target.___metadata || {};
-                    target.___metadata[key] = {
-                        type: 'accessors',
-                        value: _extends({}, interceptors, {
-                            attribute: options
-                        })
-                    };
+                    if (desc.hasOwnProperty(key)) {
+                        return true;
+                    }
+                }
 
-                    return val;
-                };
+                return false;
+            }
 
-                function attribute(options) {
+            _export('isDescriptor', isDescriptor);
+
+            function decorate(handleDescriptor, entryArgs) {
+                if (isDescriptor(entryArgs[entryArgs.length - 1])) {
+                    return handleDescriptor.apply(undefined, entryArgs.concat([[]]));
+                } else {
                     return function () {
-                        return attributeHandler.apply(undefined, _slice.call(arguments).concat([options]));
+                        return handleDescriptor.apply(undefined, Array.prototype.slice.call(arguments).concat([entryArgs]));
                     };
                 }
-            })();
-            (function () {
-                _export('customElement', customElement);
+            }
 
-                var queues = {};
-                var addToExecQ = function addToExecQ(key, method) {
-                    if (!queues.hasOwnProperty(key)) {
-                        queues[key] = [];
-                    }
-                    queues[key].push(method);
+            _export('decorate', decorate);
+
+            accessorHandler = function accessorHandler(target, key, descriptor, options) {
+                return _extends({}, descriptor, {
+                    value: function value() {}
+                });
+            };
+
+            function accessor(options) {
+                return accessorHandler.apply(undefined, Array.prototype.slice.call(arguments).concat([options]));
+            }
+
+            _export('accessor', accessor);
+
+            attributeHandler = function attributeHandler(target, key, descriptor, options) {
+
+                var interceptors = {};
+
+                options = Object.assign({
+                    key: key
+                }, options || {});
+
+                interceptors['get'] = function () {
+                    if (!this.controller) return options && options.defaultValue;
+                    return descriptor['get'].apply(this.controller, arguments);
+                };
+                interceptors['set'] = function (val) {
+                    if (!this.controller) return;
+                    descriptor['set'].apply(this.controller, arguments);
                 };
 
-                var handleCustomElementDescriptor = function handleCustomElementDescriptor(target, _ref2) {
-                    var tagName = _ref2[0];
-                    var _ref2$1 = _ref2[1];
-                    var opts = _ref2$1 === undefined ? {} : _ref2$1;
+                var val = _extends({}, descriptor, interceptors);
 
-                    var options = {
-                        accessors: {},
-                        methods: {},
-                        lifecycle: {},
-                        events: {}
-                    };
+                target.___metadata = target.___metadata || {};
+                target.___metadata[key] = {
+                    type: 'accessors',
+                    value: _extends({}, interceptors, {
+                        attribute: options
+                    })
+                };
 
-                    if (opts.extendsFrom !== undefined) {
-                        options['extends'] = opts.extendsFrom;
-                    }
+                return val;
+            };
 
-                    if (opts.template !== undefined) {
-                        options.template = opts.template;
-                    }
+            function attribute(options) {
+                return function () {
+                    return attributeHandler.apply(undefined, Array.prototype.slice.call(arguments).concat([options]));
+                };
+            }
 
-                    if (target.prototype.___metadata) {
+            _export('attribute', attribute);
 
-                        for (var key in target.prototype.___metadata) {
-                            var metadata = target.prototype.___metadata[key];
+            queues = {};
 
-                            if (!metadata) continue;
-                            switch (key) {
-                                case 'lifecycle':
-                                    options[metadata.type][key] = metadata.value;
-                                    break;
-                                default:
-                                    options[metadata.type][key] = metadata.value;
-                                    break;
-                            }
+            addToExecQ = function addToExecQ(key, method) {
+                if (!queues.hasOwnProperty(key)) {
+                    queues[key] = [];
+                }
+                queues[key].push(method);
+            };
+
+            handleCustomElementDescriptor = function handleCustomElementDescriptor(target, _ref2) {
+                var tagName = _ref2[0];
+                var _ref2$ = _ref2[1];
+                var opts = _ref2$ === undefined ? {} : _ref2$;
+
+
+                var options = {
+                    accessors: {},
+                    methods: {},
+                    lifecycle: {},
+                    events: {}
+                };
+
+                if (opts.extendsFrom !== undefined) {
+                    options['extends'] = opts.extendsFrom;
+                }
+
+                if (opts.template !== undefined) {
+                    options.template = opts.template;
+                }
+
+                if (target.prototype.___metadata) {
+
+                    for (var key in target.prototype.___metadata) {
+                        var metadata = target.prototype.___metadata[key];
+
+                        if (!metadata) continue;
+                        switch (key) {
+                            case 'lifecycle':
+                                options[metadata.type][key] = metadata.value;
+                                break;
+                            default:
+                                options[metadata.type][key] = metadata.value;
+                                break;
                         }
-
-                        delete target.prototype.___metadata;
-                    }
-                    return Registry.register(tagName, target, options);
-                };
-
-                function customElement() {
-                    return decorate(handleCustomElementDescriptor, arguments);
-                }
-
-                ;
-            })();
-
-            (function () {
-                _export('deprecate', deprecate);
-
-                var DEFAULT_MSG = 'This function will be removed in future versions.';
-
-                function handleDepricateDescriptor(target, key, descriptor, _ref3) {
-                    var _ref3$0 = _ref3[0];
-                    var msg = _ref3$0 === undefined ? DEFAULT_MSG : _ref3$0;
-                    var _ref3$1 = _ref3[1];
-                    var options = _ref3$1 === undefined ? {} : _ref3$1;
-
-                    if (typeof descriptor.value !== 'function') {
-                        throw new SyntaxError('Only functions can be marked as deprecated');
                     }
 
-                    var methodSignature = target.constructor.name + '#' + key;
-
-                    if (options.url) {
-                        msg += '\n\n    See ' + options.url + ' for more details.\n\n';
-                    }
-
-                    return _extends({}, descriptor, {
-                        value: function deprecationWrapper() {
-                            console.warn('DEPRECATION ' + methodSignature + ': ' + msg);
-                            return descriptor.value.apply(this, arguments);
-                        }
-                    });
+                    delete target.prototype.___metadata;
                 }
+                return Registry.register(tagName, target, options);
+            };
 
-                function deprecate() {
-                    return decorate(handleDepricateDescriptor, arguments);
-                }
-            })();
+            function customElement() {
+                return decorate(handleCustomElementDescriptor, arguments);
+            }
+            _export('customElement', customElement);
 
-            (function () {
-                _export('eventHandler', eventHandler);
+            ;
 
-                var handleDescriptor = function handleDescriptor(target, key, descriptor, _ref4) {
-                    var event = _ref4[0];
+            DEFAULT_MSG = 'This function will be removed in future versions.';
+            function deprecate() {
+                return decorate(handleDepricateDescriptor, arguments);
+            }
 
-                    function valueHandler(e) {
-                        var controller = this.controller;
+            _export('deprecate', deprecate);
 
-                        if (e && e.currentTarget && event.indexOf('delegate(') > -1) controller = e.currentTarget.controller;
+            handleEventHandlerDescriptor = function handleEventHandlerDescriptor(target, key, descriptor, _ref4) {
+                var event = _ref4[0];
 
-                        if (!controller) return;
-                        return descriptor.value.apply(controller, arguments);
-                    };
 
-                    target.___metadata = target.___metadata || {};
-                    target.___metadata[event] = { type: 'events', value: valueHandler };
+                function valueHandler(e) {
+                    var controller = this.controller;
 
-                    return _extends({}, descriptor, {
-                        value: valueHandler
-                    });
+                    if (e && e.currentTarget && event.indexOf('delegate(') > -1) controller = e.currentTarget.controller;
+
+                    if (!controller) return;
+                    return descriptor.value.apply(controller, arguments);
                 };
 
-                function eventHandler() {
-                    return decorate(handleDescriptor, arguments);
-                }
-            })();
+                target.___metadata = target.___metadata || {};
+                target.___metadata[event] = { type: 'events', value: valueHandler };
 
-            (function () {
-                _export('lifeCycleEventHandler', lifeCycleEventHandler);
+                return _extends({}, descriptor, {
+                    value: valueHandler
+                });
+            };
 
-                var handleDescriptor = function handleDescriptor(target, key, descriptor, _ref5) {
-                    var event = _ref5[0];
+            function eventHandler() {
+                return decorate(handleEventHandlerDescriptor, arguments);
+            }
 
-                    function valueHandler() {
-                        if (!this.controller) return;
-                        return descriptor.value.apply(this.controller, arguments);
-                    };
+            _export('eventHandler', eventHandler);
 
-                    target.___metadata = target.___metadata || {};
-                    target.___metadata[event] = {
-                        type: 'lifecycle',
-                        value: valueHandler
-                    };
+            handleLifeCycleEventHandlerDescriptor = function handleLifeCycleEventHandlerDescriptor(target, key, descriptor, _ref5) {
+                var event = _ref5[0];
 
-                    return _extends({}, descriptor, {
-                        value: valueHandler
-                    });
+
+                function valueHandler() {
+                    if (!this.controller) return;
+                    return descriptor.value.apply(this.controller, arguments);
                 };
 
-                function lifeCycleEventHandler() {
-                    return decorate(handleDescriptor, arguments);
-                }
-            })();
-
-            (function () {
-                _export('method', method);
-
-                var handleDescriptor = function handleDescriptor(target, key, descriptor) {
-
-                    function valueHandler() {
-                        if (!this.controller) return;
-                        return descriptor.value.apply(this.controller, arguments);
-                    };
-
-                    target.___metadata = target.___metadata || {};
-                    target.___metadata[key] = { type: 'methods', value: valueHandler };
-
-                    return _extends({}, descriptor, {
-                        value: valueHandler
-                    });
+                target.___metadata = target.___metadata || {};
+                target.___metadata[event] = {
+                    type: 'lifecycle',
+                    value: valueHandler
                 };
 
-                function method() {
-                    return decorate(handleDescriptor, arguments);
-                }
-            })();
+                return _extends({}, descriptor, {
+                    value: valueHandler
+                });
+            };
+
+            function lifeCycleEventHandler() {
+                return decorate(handleLifeCycleEventHandlerDescriptor, arguments);
+            }
+
+            _export('lifeCycleEventHandler', lifeCycleEventHandler);
+
+            handleMethodDescriptor = function handleMethodDescriptor(target, key, descriptor) {
+
+                function valueHandler() {
+                    if (!this.controller) return;
+                    return descriptor.value.apply(this.controller, arguments);
+                };
+
+                target.___metadata = target.___metadata || {};
+                target.___metadata[key] = { type: 'methods', value: valueHandler };
+
+                return _extends({}, descriptor, {
+                    value: valueHandler
+                });
+            };
+
+            function method() {
+                return decorate(handleMethodDescriptor, arguments);
+            }
+
+            _export('method', method);
         }
     };
 });
